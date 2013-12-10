@@ -1,9 +1,11 @@
 package com.example.journeymanager.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.example.journeymanager.R;
 
 public class JourneyInfo extends Activity {
@@ -26,6 +28,8 @@ public class JourneyInfo extends Activity {
         if (id == R.id.action_share) {
             return true;
         } else if (id == R.id.action_map) {
+            Intent i = new Intent(this, LocationMap.class);
+            startActivity(i);
             return true;
         }
         return super.onOptionsItemSelected(item);

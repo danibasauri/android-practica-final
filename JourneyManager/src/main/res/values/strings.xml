@@ -16,5 +16,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_share">Compartir</string>
     <string name="action_map">Ubicacion</string>
+    <string name="title_activity_location_map">Destino</string>
+    <string name="title_activity_location_info">Location Info</string>
 
 </resources>
