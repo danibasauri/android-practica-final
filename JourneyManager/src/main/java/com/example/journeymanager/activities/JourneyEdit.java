@@ -19,8 +19,8 @@ package com.example.journeymanager.activities;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.example.journeymanager.R;
@@ -47,8 +47,6 @@ public class JourneyEdit extends Activity {
         mTitleText = (EditText) findViewById(R.id.title);
         mBodyText = (EditText) findViewById(R.id.body);
 
-        Button confirmButton = (Button) findViewById(R.id.confirm);
-
         mRowId = (savedInstanceState == null) ? null :
                 (Long) savedInstanceState.getSerializable(NotesDbAdapter.KEY_ROWID);
         if (mRowId == null) {
@@ -56,18 +54,9 @@ public class JourneyEdit extends Activity {
             mRowId = extras != null ? extras.getLong(NotesDbAdapter.KEY_ROWID)
                     : null;
         }
-
         populateFields();
-
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-                setResult(RESULT_OK);
-                finish();
-            }
-
-        });
     }
+
 
     private void populateFields() {
         if (mRowId != null) {
@@ -111,6 +100,23 @@ public class JourneyEdit extends Activity {
         } else {
             mDbHelper.updateNote(mRowId, title, body);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.note_edit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_add) {
+            setResult(RESULT_OK);
+            finish();
+            return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
 }

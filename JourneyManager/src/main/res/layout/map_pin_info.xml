@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="15dip"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_action_about" />
 
     <TextView
         android:id="@+id/secondLine"
