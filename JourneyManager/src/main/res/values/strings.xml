@@ -3,12 +3,12 @@
 
     <string name="app_name">Notepad v3</string>
     <string name="no_notes">No Notes Yet</string>
-    <string name="menu_insert">Add Note</string>
-    <string name="menu_delete">Delete Note</string>
+    <string name="menu_insert">Add journey</string>
+    <string name="menu_delete">Delete journey</string>
     <string name="title">Title</string>
     <string name="body">Body</string>
     <string name="confirm">Confirm</string>
-    <string name="edit_note">Edit Note</string>
+    <string name="edit_note">Edit journey</string>
     <string name="action_new">Añadir viaje</string>
     <string name="menu_edit">Editar</string>
     <string name="title_activity_city_info">CityInfo</string>
@@ -19,5 +19,10 @@
     <string name="title_activity_location_map">Destino</string>
     <string name="title_activity_location_info">Location Info</string>
     <string name="action_accept">Aceptar</string>
+    <string name="donde">¿A dónde?</string>
+    <string name="quien">¿Con quién?</string>
+    <string name="cuando">¿Cuándo?</string>
+    <string name="editar">20/54/9846</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

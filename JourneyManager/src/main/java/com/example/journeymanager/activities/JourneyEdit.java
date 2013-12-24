@@ -17,41 +17,42 @@
 package com.example.journeymanager.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.journeymanager.R;
-import com.example.journeymanager.dataBase.NotesDbAdapter;
+import com.example.journeymanager.dataBase.JourneysDbAdapter;
 
 
 public class JourneyEdit extends Activity {
 
-    private EditText mTitleText;
-    private EditText mBodyText;
+    private EditText mCityText;
+    private Button mDateText;
     private Long mRowId;
-    private NotesDbAdapter mDbHelper;
+    private JourneysDbAdapter mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDbHelper = new NotesDbAdapter(this);
+        mDbHelper = new JourneysDbAdapter(this);
         mDbHelper.open();
 
         setContentView(R.layout.note_edit);
         setTitle(R.string.edit_note);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mTitleText = (EditText) findViewById(R.id.title);
-        mBodyText = (EditText) findViewById(R.id.body);
+        mCityText = (EditText) findViewById(R.id.city);
 
         mRowId = (savedInstanceState == null) ? null :
-                (Long) savedInstanceState.getSerializable(NotesDbAdapter.KEY_ROWID);
+                (Long) savedInstanceState.getSerializable(JourneysDbAdapter.KEY_ROWID);
         if (mRowId == null) {
             Bundle extras = getIntent().getExtras();
-            mRowId = extras != null ? extras.getLong(NotesDbAdapter.KEY_ROWID)
+            mRowId = extras != null ? extras.getLong(JourneysDbAdapter.KEY_ROWID)
                     : null;
         }
         populateFields();
@@ -60,12 +61,12 @@ public class JourneyEdit extends Activity {
 
     private void populateFields() {
         if (mRowId != null) {
-            Cursor note = mDbHelper.fetchNote(mRowId);
-            startManagingCursor(note);
-            mTitleText.setText(note.getString(
-                    note.getColumnIndexOrThrow(NotesDbAdapter.KEY_TITLE)));
-            mBodyText.setText(note.getString(
-                    note.getColumnIndexOrThrow(NotesDbAdapter.KEY_BODY)));
+            Cursor journey = mDbHelper.fetchJourney(mRowId);
+            startManagingCursor(journey);
+            mCityText.setText(journey.getString(
+                    journey.getColumnIndexOrThrow(JourneysDbAdapter.KEY_CITY)));
+            mDateText.setText(journey.getString(
+                    journey.getColumnIndexOrThrow(JourneysDbAdapter.KEY_DATE)));
         }
     }
 
@@ -73,7 +74,7 @@ public class JourneyEdit extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveState();
-        outState.putSerializable(NotesDbAdapter.KEY_ROWID, mRowId);
+        outState.putSerializable(JourneysDbAdapter.KEY_ROWID, mRowId);
     }
 
     @Override
@@ -89,16 +90,16 @@ public class JourneyEdit extends Activity {
     }
 
     private void saveState() {
-        String title = mTitleText.getText().toString();
-        String body = mBodyText.getText().toString();
+        String city = mCityText.getText().toString();
+        String date = mDateText.getText().toString();
 
         if (mRowId == null) {
-            long id = mDbHelper.createNote(title, body);
+            long id = mDbHelper.createJourney(city, date);
             if (id > 0) {
                 mRowId = id;
             }
         } else {
-            mDbHelper.updateNote(mRowId, title, body);
+            mDbHelper.updateJourney(mRowId, city, date);
         }
     }
 
@@ -109,14 +110,13 @@ public class JourneyEdit extends Activity {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_add) {
-            setResult(RESULT_OK);
-            finish();
+        if (id == R.id.action_accept) {
+            saveState();
+            startActivity(new Intent(this, JourneyList.class));
             return true;
         }
-        return super.onContextItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
-
 }

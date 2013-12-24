@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.example.journeymanager.R;
-import com.example.journeymanager.dataBase.NotesDbAdapter;
+import com.example.journeymanager.dataBase.JourneysDbAdapter;
 
 public class JourneyList extends ListActivity {
     private static final int ACTIVITY_CREATE = 0;
@@ -23,23 +23,23 @@ public class JourneyList extends ListActivity {
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
     private static final int EDIT_ID = Menu.FIRST + 2;
-    private NotesDbAdapter mDbHelper;
+    private JourneysDbAdapter mDbHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notes_list);
-        mDbHelper = new NotesDbAdapter(this);
+        mDbHelper = new JourneysDbAdapter(this);
         mDbHelper.open();
         fillData();
         registerForContextMenu(getListView());
     }
 
     private void fillData() {
-        Cursor notesCursor = mDbHelper.fetchAllNotes();
+        Cursor notesCursor = mDbHelper.fetchAllJourneys();
         startManagingCursor(notesCursor);
         // Create an array to specify the fields we want to display in the list (only TITLE)
-        String[] from = new String[]{NotesDbAdapter.KEY_TITLE};
+        String[] from = new String[]{JourneysDbAdapter.KEY_CITY};
         // and an array of the fields we want to bind those fields to (in this case just text1)
         int[] to = new int[]{R.id.text1};
         // Now create a simple cursor adapter and set it to display
@@ -82,13 +82,13 @@ public class JourneyList extends ListActivity {
 
             case DELETE_ID:
                 AdapterContextMenuInfo infoOnDelete = (AdapterContextMenuInfo) item.getMenuInfo();
-                mDbHelper.deleteNote(infoOnDelete.id);
+                mDbHelper.deleteJourney(infoOnDelete.id);
                 fillData();
                 return true;
             case EDIT_ID:
                 AdapterContextMenuInfo infoOnEdit = (AdapterContextMenuInfo) item.getMenuInfo();
                 Intent i = new Intent(this, JourneyEdit.class);
-                i.putExtra(NotesDbAdapter.KEY_ROWID, infoOnEdit.id);
+                i.putExtra(JourneysDbAdapter.KEY_ROWID, infoOnEdit.id);
                 startActivityForResult(i, ACTIVITY_EDIT);
                 return true;
         }
@@ -104,7 +104,7 @@ public class JourneyList extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Intent i = new Intent(this, JourneyInfo.class);
-        i.putExtra(NotesDbAdapter.KEY_ROWID, id);
+        i.putExtra(JourneysDbAdapter.KEY_ROWID, id);
         startActivity(i);
     }
 
