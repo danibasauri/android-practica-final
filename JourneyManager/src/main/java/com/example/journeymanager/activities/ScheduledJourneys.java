@@ -1,8 +1,7 @@
 package com.example.journeymanager.activities;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -10,42 +9,49 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import com.example.journeymanager.R;
 import com.example.journeymanager.dataBase.JourneysDbAdapter;
+import com.example.journeymanager.objects.Journey;
+import com.example.journeymanager.objects.JourneyConstantList;
+import com.example.journeymanager.objects.JourneysListAdapter;
 
-public class JourneyList extends ListActivity {
+import java.util.HashMap;
+
+public class ScheduledJourneys extends Activity {
+    private ListView journeysList;
+    JourneyConstantList savedJourneyConstantList;
     private static final int ACTIVITY_CREATE = 0;
     private static final int ACTIVITY_EDIT = 1;
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
     private static final int EDIT_ID = Menu.FIRST + 2;
-    private JourneysDbAdapter mDbHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.notes_list);
-        mDbHelper = new JourneysDbAdapter(this);
-        mDbHelper.open();
+        setContentView(R.layout.scheduled_journeys);
+        savedJourneyConstantList = (JourneyConstantList) getApplicationContext();
         fillData();
-        registerForContextMenu(getListView());
     }
 
     private void fillData() {
-        Cursor notesCursor = mDbHelper.fetchAllJourneys();
-        startManagingCursor(notesCursor);
-        // Create an array to specify the fields we want to display in the list (only TITLE)
-        String[] from = new String[]{JourneysDbAdapter.KEY_CITY};
-        // and an array of the fields we want to bind those fields to (in this case just text1)
-        int[] to = new int[]{R.id.text1};
-        // Now create a simple cursor adapter and set it to display
-        SimpleCursorAdapter notes =
-                new SimpleCursorAdapter(this, R.layout.notes_row, notesCursor, from, to);
-        setListAdapter(notes);
+        HashMap<Integer, Journey> journeys = savedJourneyConstantList.getJourneys();
+        journeysList = (ListView) findViewById(R.id.journeysList);
+        journeysList.setAdapter(new JourneysListAdapter(this, journeys));
+        journeysList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                Intent intent = new Intent(ScheduledJourneys.this, JourneyInfo.class);
+                savedJourneyConstantList.saveJourney(savedJourneyConstantList.getItemById(position));
+                startActivity(intent);
+            }
+
+        });
     }
 
     @Override
@@ -82,7 +88,7 @@ public class JourneyList extends ListActivity {
 
             case DELETE_ID:
                 AdapterContextMenuInfo infoOnDelete = (AdapterContextMenuInfo) item.getMenuInfo();
-                mDbHelper.deleteJourney(infoOnDelete.id);
+                savedJourneyConstantList.deleteJourney(infoOnDelete.position);
                 fillData();
                 return true;
             case EDIT_ID:
@@ -100,9 +106,9 @@ public class JourneyList extends ListActivity {
         startActivityForResult(i, ACTIVITY_CREATE);
     }
 
-    @Override
+
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+        onListItemClick(l, v, position, id);
         Intent i = new Intent(this, JourneyInfo.class);
         i.putExtra(JourneysDbAdapter.KEY_ROWID, id);
         startActivity(i);

@@ -22,12 +22,17 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
+        android:name="com.example.journeymanager.objects.JourneyConstantList"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
-            android:name="com.example.journeymanager.activities.JourneyList"
+            android:name=".activities.ScheduledJourneys"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,16 +42,16 @@
         </activity>
         <activity
             android:name="com.example.journeymanager.activities.JourneyEdit"
-            android:parentActivityName=".activities.JourneyList">
-            <meta-data
+            android:parentActivityName=".activities.ScheduledJourneys">
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.JourneyList" />
         </activity>
         <activity
             android:name="com.example.journeymanager.activities.JourneyInfo"
             android:label="@string/title_activity_city_info"
-            android:parentActivityName=".activities.JourneyList">
-            <meta-data
+            android:parentActivityName=".activities.ScheduledJourneys">
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.JourneyList" />
         </activity>

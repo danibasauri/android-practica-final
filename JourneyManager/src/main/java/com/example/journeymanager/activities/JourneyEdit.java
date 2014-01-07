@@ -17,16 +17,21 @@
 package com.example.journeymanager.activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.journeymanager.DatePickerFragment;
 import com.example.journeymanager.R;
 import com.example.journeymanager.dataBase.JourneysDbAdapter;
+
+import java.util.Calendar;
 
 
 public class JourneyEdit extends Activity {
@@ -42,7 +47,7 @@ public class JourneyEdit extends Activity {
         mDbHelper = new JourneysDbAdapter(this);
         mDbHelper.open();
 
-        setContentView(R.layout.note_edit);
+        setContentView(R.layout.journey_edit);
         setTitle(R.string.edit_note);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -50,6 +55,15 @@ public class JourneyEdit extends Activity {
 
         mRowId = (savedInstanceState == null) ? null :
                 (Long) savedInstanceState.getSerializable(JourneysDbAdapter.KEY_ROWID);
+
+        mDateText = (Button) findViewById(R.id.date);
+        initializeDateButton();
+        mDateText.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
         if (mRowId == null) {
             Bundle extras = getIntent().getExtras();
             mRowId = extras != null ? extras.getLong(JourneysDbAdapter.KEY_ROWID)
@@ -58,6 +72,13 @@ public class JourneyEdit extends Activity {
         populateFields();
     }
 
+    private void initializeDateButton() {
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        mDateText.setText(String.valueOf(day) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year));
+    }
 
     private void populateFields() {
         if (mRowId != null) {
@@ -114,7 +135,7 @@ public class JourneyEdit extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_accept) {
             saveState();
-            startActivity(new Intent(this, JourneyList.class));
+            startActivity(new Intent(this, ScheduledJourneys.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
