@@ -36,4 +36,6 @@ android {
 dependencies {
     compile 'com.google.android.gms:play-services:4.0.30'
     compile 'com.android.support:support-v4:+'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.1.4'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.1.4'
 }

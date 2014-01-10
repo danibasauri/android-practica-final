@@ -19,7 +19,6 @@ package com.example.journeymanager.activities;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +28,6 @@ import android.widget.EditText;
 
 import com.example.journeymanager.DatePickerFragment;
 import com.example.journeymanager.R;
-import com.example.journeymanager.dataBase.JourneysDbAdapter;
 
 import java.util.Calendar;
 
@@ -38,24 +36,15 @@ public class JourneyEdit extends Activity {
 
     private EditText mCityText;
     private Button mDateText;
-    private Long mRowId;
-    private JourneysDbAdapter mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDbHelper = new JourneysDbAdapter(this);
-        mDbHelper.open();
 
         setContentView(R.layout.journey_edit);
         setTitle(R.string.edit_note);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
         mCityText = (EditText) findViewById(R.id.city);
-
-        mRowId = (savedInstanceState == null) ? null :
-                (Long) savedInstanceState.getSerializable(JourneysDbAdapter.KEY_ROWID);
-
         mDateText = (Button) findViewById(R.id.date);
         initializeDateButton();
         mDateText.setOnClickListener(new View.OnClickListener() {
@@ -64,11 +53,6 @@ public class JourneyEdit extends Activity {
                 newFragment.show(getFragmentManager(), "datePicker");
             }
         });
-        if (mRowId == null) {
-            Bundle extras = getIntent().getExtras();
-            mRowId = extras != null ? extras.getLong(JourneysDbAdapter.KEY_ROWID)
-                    : null;
-        }
         populateFields();
     }
 
@@ -81,21 +65,13 @@ public class JourneyEdit extends Activity {
     }
 
     private void populateFields() {
-        if (mRowId != null) {
-            Cursor journey = mDbHelper.fetchJourney(mRowId);
-            startManagingCursor(journey);
-            mCityText.setText(journey.getString(
-                    journey.getColumnIndexOrThrow(JourneysDbAdapter.KEY_CITY)));
-            mDateText.setText(journey.getString(
-                    journey.getColumnIndexOrThrow(JourneysDbAdapter.KEY_DATE)));
-        }
+
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveState();
-        outState.putSerializable(JourneysDbAdapter.KEY_ROWID, mRowId);
     }
 
     @Override
@@ -113,15 +89,6 @@ public class JourneyEdit extends Activity {
     private void saveState() {
         String city = mCityText.getText().toString();
         String date = mDateText.getText().toString();
-
-        if (mRowId == null) {
-            long id = mDbHelper.createJourney(city, date);
-            if (id > 0) {
-                mRowId = id;
-            }
-        } else {
-            mDbHelper.updateJourney(mRowId, city, date);
-        }
     }
 
     @Override

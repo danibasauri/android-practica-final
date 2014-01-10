@@ -1,4 +1,4 @@
-package com.example.journeymanager.objects;
+package com.example.journeymanager.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.journeymanager.R;
+import com.example.journeymanager.objects.Journey;
 
 import java.util.HashMap;
 

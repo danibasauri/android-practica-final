@@ -3,10 +3,10 @@
     tools:context="com.dani.notepad.activities.JourneyInfo">
 
     <item
-        android:id="@+id/action_share"
-        android:icon="@drawable/ic_action_share"
-        android:title="@string/action_share"
-        android:showAsAction="ifRoom" />
+        android:id="@+id/menu_item_share"
+        android:showAsAction="ifRoom"
+        android:title="Compartir"
+        android:actionProviderClass="android.widget.ShareActionProvider" />
     <item
         android:id="@+id/action_map"
         android:icon="@drawable/ic_action_map"

@@ -14,10 +14,9 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 import com.example.journeymanager.R;
-import com.example.journeymanager.dataBase.JourneysDbAdapter;
+import com.example.journeymanager.adapters.JourneysListAdapter;
 import com.example.journeymanager.objects.Journey;
 import com.example.journeymanager.objects.JourneyConstantList;
-import com.example.journeymanager.objects.JourneysListAdapter;
 
 import java.util.HashMap;
 
@@ -94,7 +93,7 @@ public class ScheduledJourneys extends Activity {
             case EDIT_ID:
                 AdapterContextMenuInfo infoOnEdit = (AdapterContextMenuInfo) item.getMenuInfo();
                 Intent i = new Intent(this, JourneyEdit.class);
-                i.putExtra(JourneysDbAdapter.KEY_ROWID, infoOnEdit.id);
+                //i.putExtra(JourneysDbAdapter.KEY_ROWID, infoOnEdit.id);
                 startActivityForResult(i, ACTIVITY_EDIT);
                 return true;
         }
@@ -110,7 +109,7 @@ public class ScheduledJourneys extends Activity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         onListItemClick(l, v, position, id);
         Intent i = new Intent(this, JourneyInfo.class);
-        i.putExtra(JourneysDbAdapter.KEY_ROWID, id);
+        //i.putExtra(JourneysDbAdapter.KEY_ROWID, id);
         startActivity(i);
     }
 
